@@ -1,5 +1,11 @@
 My final project for EECS 1021<br>
 <br>
+Depencancies<br>
+Firmata4j 2.3.8<br>
+jssc 2.9.4 <br>
+
+OpenCSV 3.8<br>
+<br>
 Usage Instructions<br>
 <br>
 In "PlantsnWhatnot.JAVA":<br>
@@ -16,6 +22,7 @@ Arduino UNO board<br>
 OLED Display (SSD1315)<br>
 Button<br>
 LED Socket Kit<br>
-Capacitive Moisture Sensor<br>
+Capacitive Moisture Sensor //Future update will need 2<br>
 MOSFET<br>
 Liquid Pump<br>
+Buzzer // Future update will need <br>
