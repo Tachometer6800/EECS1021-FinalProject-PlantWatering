@@ -1,23 +1,23 @@
-My final project for EECS 1021<br>
+<h1>My final project for EECS 1021</h1><br>
 <br>
-Depencancies<br>
+<h2>Depencancies</h2><br>
 Firmata4j 2.3.8<br>
 jssc 2.9.4 <br>
 
 OpenCSV 3.8<br>
 <br>
-Usage Instructions<br>
+<h2>Usage Instructions</h2><br>
 <br>
-In "PlantsnWhatnot.JAVA":<br>
+<h3>In "PlantsnWhatnot.JAVA":</h3><br>
 Change "PORT" to port of your Arduino<br>
 Change "FOLDER_PATH" to desired folder path for CSV files<br>
 Change "timerLength" to how often you want the sensor to check<br>
 <br>
-In "PlantsLogic":<br>
+<h3>In "PlantsLogic":</h3><br>
 Change "dryThreshold" to the percent dry you want your plant to be <br>
 Change "cooldownConstant" to how many run cycles you want the water to saturate<br>
 <br>
-Parts used:<br>
+<h2>Parts used:</h2><br>
 Arduino UNO board<br>
 OLED Display (SSD1315)<br>
 Button<br>
