@@ -7,15 +7,15 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 static final int A1 = 15; // Moisture Sensor
-static final int D2 = 2; // BUTTON
+static final int D2 = 2; // Reset Button
 static final int D4 = 4; // LED
 static final byte DISPLAY = 0x3C; // OLED Display
 static final int D7 = 7; // MOSFET
-int timerLength = 5000;
+int timerLength = 5000; // Change to set how often timer goes off
 private static final String FOLDER_PATH = "C:/User/GenericUserPath/"; // Change to path you want CSV files to save to
 
 private static String generateFilePath(){
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
     String timestamp = LocalDateTime.now().format(formatter);
     return(FOLDER_PATH + "data_" + timestamp + ".csv");
 };
