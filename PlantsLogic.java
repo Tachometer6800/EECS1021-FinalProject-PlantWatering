@@ -57,7 +57,6 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
     public static long RollingAverage(ArrayList<Long> SensorArray, int lowerBound, int upperBound){
         long RollingAvg = 0;
         for (int i = 0; i <= SensorArray.size() - 1; i++){
-            //RollingAvg += ((((SensorArray.get(i) - lowerBound)/(upperBound -  lowerBound))*100)/SensorArray.size());
             RollingAvg += (((SensorArray.get(i)- lowerBound)/((upperBound - lowerBound)/100))/ SensorArray.size());
 
             if ((SensorArray.get(i) < lowerBound || SensorArray.get(i) > upperBound)){
@@ -76,7 +75,7 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
     }
 
     public static long Watering(SSD1306 display, Pin MOSFETPin, long RollingAvg, long Threshold, long Cooldown , long CooldownConstant) throws InterruptedException, IOException {
-        if (RollingAvg <= Threshold && Cooldown <= 0){
+        if (RollingAvg >= Threshold && Cooldown <= 0){
             display.clear();
             display.getCanvas().drawString(0, 0, "Watering...");
             display.display();
