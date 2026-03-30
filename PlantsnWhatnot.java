@@ -6,6 +6,7 @@ import org.firmata4j.ssd1306.SSD1306;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+static final String PORT = "COM3"; // Arduino Port
 static final int A1 = 15; // Moisture Sensor
 static final int D2 = 2; // Reset Button
 static final int D4 = 4; // LED
@@ -28,7 +29,7 @@ void main()
     FileWriter fileWriter = new FileWriter(CSVoutput);
 
     // Initialize Arduino
-    var device = new FirmataDevice("COM3");
+    var device = new FirmataDevice(PORT);
     device.start();
     device.ensureInitializationIsDone();
 
