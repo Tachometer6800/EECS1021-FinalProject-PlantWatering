@@ -1,4 +1,4 @@
-<h1>My final project for EECS 1021</h1>
+<h1>My Final Project for EECS 1021</h1>
 <h2>Depencancies</h2>
  - Firmata4j 2.3.8<br>
  - JSSC 2.9.4 <br>
