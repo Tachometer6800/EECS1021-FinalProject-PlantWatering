@@ -21,7 +21,6 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
     private final Pin sensorPin;
     public boolean Running = true;
     public final FileWriter fileWriter;
-    public boolean OutOFWater = false;
     public long LastDry;
 
 
