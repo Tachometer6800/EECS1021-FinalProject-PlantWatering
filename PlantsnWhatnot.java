@@ -8,12 +8,13 @@ import java.time.format.DateTimeFormatter;
 
 static final String PORT = "COM3"; // Arduino Port
 static final int A1 = 15; // Moisture Sensor
-static final int D2 = 2; // Reset Button
-static final int D4 = 4; // LED
+static final int D2 = 2; // Button
+static final int D4 = 4; // LED Light
 static final byte DISPLAY = 0x3C; // OLED Display
 static final int D7 = 7; // MOSFET
-int timerLength = 5000; // Change to set how often timer goes off
-private static final String FOLDER_PATH = "C:/User/GenericUserPath/"; // Change to path you want CSV files to save to
+static final int D6 = 6; // Buzzer
+int timerLength = 5000;
+private static final String FOLDER_PATH = "FilePath"; // Change to path you want CSV files to save to
 
 private static String generateFilePath(){
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
@@ -23,10 +24,6 @@ private static String generateFilePath(){
 
 void main()
     throws InterruptedException, IOException {
-
-    File CSVoutput = new File(generateFilePath());
-    CSVoutput.getParentFile().mkdirs();
-    FileWriter fileWriter = new FileWriter(CSVoutput);
 
     // Initialize Arduino
     var device = new FirmataDevice(PORT);
@@ -54,7 +51,17 @@ void main()
     var RESET_BUTTON = device.getPin(D2);
     RESET_BUTTON.setMode(Pin.Mode.INPUT);
 
-    PlantsLogic EventListener = new PlantsLogic(RESET_BUTTON, MOSFET, LED, WetTester, disp, fileWriter);
+    //Initialize Buzzer
+    var Buzzer =  device.getPin(D6);
+        Buzzer.setMode(Pin.Mode.OUTPUT);
+
+    // Initalize New CSV File
+    File CSVoutput = new File(generateFilePath());
+    CSVoutput.getParentFile().mkdirs();
+    FileWriter fileWriter = new FileWriter(CSVoutput);
+
+
+    PlantsLogic EventListener = new PlantsLogic(RESET_BUTTON, MOSFET, LED, WetTester, Buzzer, disp, fileWriter);
     device.addEventListener(EventListener);
 
     Timer timer = new Timer();
