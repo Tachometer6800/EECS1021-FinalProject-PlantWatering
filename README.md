@@ -17,7 +17,7 @@
  - OLED Display (SSD1315)<br>
  - Button<br>
  - LED Socket Kit<br>
- - Capacitive Moisture Sensor //Future update will need 2<br>
+ - Capacitive Moisture Sensor<br>
  - MOSFET<br>
  - Liquid Pump<br>
- - Buzzer // Future update will need <br>
+ - Buzzer<br>
