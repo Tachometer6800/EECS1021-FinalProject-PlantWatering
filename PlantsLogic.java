@@ -14,18 +14,22 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
     private final Pin buttonPin;
     private final Pin MOSFETPin;
     private final Pin lightPin;
+    private final Pin BuzzerPin;
     private final SSD1306 display;
     private ArrayList<Long> wetValue = new ArrayList<>();
     private long cooldown;
     private final Pin sensorPin;
     public boolean Running = true;
     public final FileWriter fileWriter;
+    public boolean OutOFWater = false;
+    public long LastDry;
 
 
-    public PlantsLogic(Pin buttonPin, Pin mosfetPin, Pin lightPin, Pin sensorPin, SSD1306 display, FileWriter fileWriter) {
+    public PlantsLogic(Pin buttonPin, Pin mosfetPin, Pin lightPin, Pin buzzerPin, Pin sensorPin, SSD1306 display, FileWriter fileWriter) {
         this.buttonPin = buttonPin;
         this.MOSFETPin = mosfetPin;
         this.lightPin = lightPin;
+        this.BuzzerPin = buzzerPin;
         this.sensorPin = sensorPin;
         this.display = display;
         this.fileWriter = fileWriter;
@@ -57,14 +61,12 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
     public static long RollingAverage(ArrayList<Long> SensorArray, int lowerBound, int upperBound){
         long RollingAvg = 0;
         for (int i = 0; i <= SensorArray.size() - 1; i++){
-            RollingAvg += (((SensorArray.get(i)- lowerBound)/((upperBound - lowerBound)/100))/ SensorArray.size());
-
             if ((SensorArray.get(i) < lowerBound || SensorArray.get(i) > upperBound)){
                 System.out.println("NEW EXTREME VALUE "+SensorArray.get(i));
+            }else{
+                RollingAvg += (((SensorArray.get(i)- lowerBound)/((upperBound - lowerBound)/100))/ SensorArray.size());
             }
-
         }
-
         if (RollingAvg > 100){
             RollingAvg = 100;
         } else if (RollingAvg < 0) {
@@ -74,8 +76,8 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
         return(RollingAvg);
     }
 
-    public static long Watering(SSD1306 display, Pin MOSFETPin, long RollingAvg, long Threshold, long Cooldown , long CooldownConstant) throws InterruptedException, IOException {
-        if (RollingAvg >= Threshold && Cooldown <= 0){
+    public static long Watering(SSD1306 display, Pin MOSFETPin, long RollingAvg, long Threshold, long Cooldown, long CooldownConstant) throws InterruptedException, IOException {
+        if (RollingAvg <= Threshold && Cooldown <= 0){
             display.clear();
             display.getCanvas().drawString(0, 0, "Watering...");
             display.display();
@@ -88,6 +90,19 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
             Cooldown = CooldownConstant;
         }
         return(Cooldown);
+    }
+
+    public static void OutOfWater(long RollingAvg, long LastDryValue,long Cooldown, Pin Buzzer) throws IOException, InterruptedException {
+        if(Cooldown <= 0){
+            if(Math.abs(RollingAvg - LastDryValue ) <= 10){
+                for(int i = 0; i < 2; i++){
+                    Buzzer.setValue(1);
+                    Thread.sleep(200);
+                    Buzzer.setValue(0);
+                    Thread.sleep(200);
+                }
+            }
+        }
     }
 
     public static long Update(Pin lightPin, SSD1306 display, long Cooldown, long RollingAvg){
@@ -122,6 +137,10 @@ public class PlantsLogic extends TimerTask implements IODeviceEventListener {
                 cooldown = PlantsLogic.Watering(display, MOSFETPin, rollingAvg, dryThreshold, cooldown, cooldownConstant);
                 cooldown = PlantsLogic.Update(lightPin, display, cooldown, rollingAvg);
                 System.out.println(cooldown);
+                if(cooldown == cooldownConstant){
+                    LastDry = rollingAvg;
+                }
+                PlantsLogic.OutOfWater(rollingAvg,LastDry,cooldown,BuzzerPin);
                 fileWriter.write(rollingAvg+",");
                 }
         } catch (Exception e) {
